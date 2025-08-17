@@ -18,27 +18,40 @@ public class HotelReservationGUI {
     }
 
     void start() {
-        frame = new JFrame("Hotel Reservation System");
-        frame.setSize(600, 500);
+        frame = new JFrame("🏨 Hotel Reservation System");
+        frame.setSize(700, 550);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(new BorderLayout(15, 15));
+        frame.getContentPane().setBackground(new Color(245, 245, 250));
 
         initRooms();
 
-        // Top Panel
+        // 🔹 Header
+        JLabel title = new JLabel("Welcome to Hotel Reservation System", JLabel.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 24));
+        title.setForeground(new Color(30, 60, 130));
+        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.add(title, BorderLayout.NORTH);
+
+        // 🔹 Top Panel (Inputs)
         JPanel topPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         topPanel.setBorder(BorderFactory.createTitledBorder("Reservation Options"));
+        topPanel.setBackground(new Color(235, 240, 255));
 
-        topPanel.add(new JLabel("Customer Name:"));
+        JLabel nameLbl = new JLabel("Customer Name:");
+        nameLbl.setFont(new Font("Arial", Font.PLAIN, 14));
         nameField = new JTextField();
+        topPanel.add(nameLbl);
         topPanel.add(nameField);
 
-        topPanel.add(new JLabel("Room Type:"));
+        JLabel roomLbl = new JLabel("Room Type:");
+        roomLbl.setFont(new Font("Arial", Font.PLAIN, 14));
         roomTypeBox = new JComboBox<>(new String[]{"STANDARD", "DELUXE", "SUITE"});
+        topPanel.add(roomLbl);
         topPanel.add(roomTypeBox);
 
-        JButton bookBtn = new JButton("Book Room");
-        JButton cancelBtn = new JButton("Cancel Booking");
+        JButton bookBtn = styledButton("Book Room", new Color(46, 204, 113));
+        JButton cancelBtn = styledButton("Cancel Booking", new Color(231, 76, 60));
         topPanel.add(bookBtn);
         topPanel.add(cancelBtn);
 
@@ -46,19 +59,21 @@ public class HotelReservationGUI {
         roomNumField = new JTextField();
         topPanel.add(roomNumField);
 
-        JButton viewBtn = new JButton("View Bookings");
-        JButton availableBtn = new JButton("Available Rooms");
+        JButton viewBtn = styledButton("View Bookings", new Color(52, 152, 219));
+        JButton availableBtn = styledButton("Available Rooms", new Color(241, 196, 15));
         topPanel.add(viewBtn);
         topPanel.add(availableBtn);
 
-        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(topPanel, BorderLayout.WEST);
 
-        // Output
+        // 🔹 Output Area
         outputArea = new JTextArea();
         outputArea.setEditable(false);
+        outputArea.setBackground(new Color(30, 30, 30));
+        outputArea.setForeground(new Color(230, 230, 230));
+        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
         JScrollPane scrollPane = new JScrollPane(outputArea);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Output"));
-
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Output Console"));
         frame.add(scrollPane, BorderLayout.CENTER);
 
         // Button actions
@@ -68,6 +83,16 @@ public class HotelReservationGUI {
         availableBtn.addActionListener(e -> showAvailableRooms());
 
         frame.setVisible(true);
+    }
+
+    JButton styledButton(String text, Color color) {
+        JButton btn = new JButton(text);
+        btn.setBackground(color);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Arial", Font.BOLD, 13));
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        return btn;
     }
 
     void initRooms() {
@@ -91,11 +116,11 @@ public class HotelReservationGUI {
                 Reservation res = new Reservation(name, r.roomNumber, type);
                 reservations.add(res);
                 saveToFile(res);
-                outputArea.append("Room " + r.roomNumber + " booked for " + name + " (" + type + ")\n");
+                outputArea.append("✅ Room " + r.roomNumber + " booked for " + name + " (" + type + ")\n");
                 return;
             }
         }
-        outputArea.append("No " + type + " rooms available.\n");
+        outputArea.append("❌ No " + type + " rooms available.\n");
     }
 
     void cancelRoom() {
@@ -121,14 +146,14 @@ public class HotelReservationGUI {
                             break;
                         }
                     }
-                    outputArea.append("Reservation canceled for Room " + roomNum + " by " + name + "\n");
+                    outputArea.append("🛑 Reservation canceled for Room " + roomNum + " by " + name + "\n");
                     found = true;
                     break;
                 }
             }
 
             if (!found) {
-                outputArea.append("Reservation not found.\n");
+                outputArea.append("⚠ Reservation not found.\n");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(frame, "Invalid room number.");
@@ -201,3 +226,5 @@ public class HotelReservationGUI {
         }
     }
 }
+
+
